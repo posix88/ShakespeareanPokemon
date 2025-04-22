@@ -25,7 +25,7 @@ extension PokeAPIService: Service {
     var path: String {
         switch self {
         case .pokemon(let name): return "/pokemon/\(name)"
-        case .pokemonSpecies(let name): return "pokemon-species/\(name)"
+        case .pokemonSpecies(let name): return "/pokemon-species/\(name)"
         }
     }
 

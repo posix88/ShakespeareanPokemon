@@ -8,7 +8,7 @@
 import Foundation
 @testable import ShakespeareanPokemon
 
-final class MockNetworkSession: NetworkSession {
+final class MockNetworkSession: NetworkSession, @unchecked Sendable {
     var invokedDataFromURL: Bool = false
     var invokedDataFromURLParameter: URL!
     var stubbedDataFromURLResult: (data: Data, response: URLResponse)!
@@ -37,7 +37,7 @@ final class MockNetworkSession: NetworkSession {
     }
 }
 
-final class MockURLParameterEncoder: URLParameterEncoderType {
+final class MockURLParameterEncoder: URLParameterEncoderType, @unchecked Sendable {
     var invokedEncode: Bool = false
     var invokedEncodeParameters: (request: URLRequest, parameters: ShakespeareanPokemon.Parameters?)!
     var stubbedError: NetworkError?
@@ -51,11 +51,11 @@ final class MockURLParameterEncoder: URLParameterEncoderType {
 }
 
 
-final class MockNetworkLayer: NetworkLayer {
+final class MockNetworkLayer: NetworkLayer, @unchecked Sendable {
     var requestInvoked: Bool = false
     var requestInvokedCount: Int = .zero
     var requestParameters: (any ShakespeareanPokemon.Service)!
-    var stubbedRequestData: Data!
+    var stubbedRequestData: [String: Data] = [:]
     var stubbedRequestError: NetworkError?
     func request(_ service: any ShakespeareanPokemon.Service) async throws -> Data {
         requestInvoked = true
@@ -64,7 +64,7 @@ final class MockNetworkLayer: NetworkLayer {
         if let stubbedRequestError {
             throw stubbedRequestError
         }
-        return stubbedRequestData
+        return stubbedRequestData[service.endpoint.absoluteString] ?? Data()
     }
 
     var fetchDataInvoked: Bool = false

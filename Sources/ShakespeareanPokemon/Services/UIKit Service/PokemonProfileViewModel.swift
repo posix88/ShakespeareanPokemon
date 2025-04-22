@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-public protocol PokemonProfileViewModelType: Sendable {
+protocol PokemonProfileViewModelType: Sendable {
     var onError: ((String) -> Void)? { get set }
     var onDataLoaded: ((Data, String) -> Void)? { get set }
 
@@ -16,14 +16,14 @@ public protocol PokemonProfileViewModelType: Sendable {
 }
 
 /// ViewModel responsible for fetching and exposing Pokémon data to the view.
-public final class PokemonProfileViewModel: PokemonProfileViewModelType {
+final class PokemonProfileViewModel: PokemonProfileViewModelType {
     private let descriptor: ShakespeareanPokemonDescriptorType
     private let imageProvider: PokemonImageProviderType
 
-    public var onError: ((String) -> Void)?
-    public var onDataLoaded: ((Data, String) -> Void)?
+    var onError: ((String) -> Void)?
+    var onDataLoaded: ((Data, String) -> Void)?
 
-    public init(
+    init(
         descriptor: ShakespeareanPokemonDescriptorType = ShakespeareanPokemonDescriptor(),
         imageProvider: PokemonImageProviderType = PokemonImageProvider()
     ) {
@@ -32,9 +32,9 @@ public final class PokemonProfileViewModel: PokemonProfileViewModelType {
     }
 
     @MainActor
-    public func load(for name: String) async {
+    func load(for name: String) async {
         do {
-            async let description = try await descriptor.shakespeareanDescription(for: name)
+            async let description = try await descriptor.shakespeareanDescription(for: name, language: .english)
             async let imageData = try await imageProvider.image(for: name)
             try await onDataLoaded?(imageData, description)
         } catch {

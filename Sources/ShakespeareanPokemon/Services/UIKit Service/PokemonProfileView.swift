@@ -9,7 +9,6 @@ import UIKit
 
 /// A simple reusable `UIView` that displays a Pokémon's sprite and its Shakespearean description.
 public class PokemonProfileView: UIView {
-
     private let imageView = UIImageView()
     private let descriptionLabel = UILabel()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)

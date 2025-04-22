@@ -53,13 +53,11 @@ protocol NetworkSession: Sendable {
 /// Extends `URLSession` to conform to `NetworkSession`, enabling dependency injection.
 extension URLSession: NetworkSession {
     func data(from url: URL) async throws -> (data: Data, response: URLResponse) {
-        print("🚀 Calling:", url.absoluteString ?? "nil")
-        return try await data(from: url, delegate: nil)
+        try await data(from: url, delegate: nil)
     }
     
     func data(for request: URLRequest) async throws -> (data: Data, response: URLResponse) {
-        print("🚀 Calling:", request.url?.absoluteString ?? "nil")
-        return try await data(for: request, delegate: nil)
+        try await data(for: request, delegate: nil)
     }
 }
 
@@ -133,9 +131,11 @@ private extension NetworkLayerWorker {
     /// - Returns: A fully configured `URLRequest`.
     /// - Throws: An error if encoding the parameters fails.
     func buildRequest(from service: any Service) throws(NetworkError) -> URLRequest {
-        var request = URLRequest(url: service.endpoint,
-                                 cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                 timeoutInterval: 10.0)
+        var request = URLRequest(
+            url: service.endpoint,
+            cachePolicy: .returnCacheDataElseLoad,
+            timeoutInterval: 10.0
+        )
         do throws(NetworkError) {
             try urlEncoder.encode(urlRequest: &request, with: service.parameters)
         } catch {

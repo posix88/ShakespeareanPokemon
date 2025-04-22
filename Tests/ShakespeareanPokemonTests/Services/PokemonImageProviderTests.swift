@@ -41,7 +41,7 @@ final class PokemonImageProviderTests: XCTestCase {
                 sprites: .init(front: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png")
             )
         )
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemon(name: "Pikachu").endpoint.absoluteString] = Data()
         mockNetworkLayer.fetchDataStubbedData = imageData
 
         // WHEN:
@@ -65,7 +65,7 @@ final class PokemonImageProviderTests: XCTestCase {
                 sprites: .init(front: "")
             )
         )
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemon(name: "Pikachu").endpoint.absoluteString] = Data()
         mockNetworkLayer.fetchDataStubbedData = imageData
 
         // WHEN:
@@ -106,7 +106,7 @@ final class PokemonImageProviderTests: XCTestCase {
                 sprites: .init(front: "imageURL")
             )
         )
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemon(name: "Pikachu").endpoint.absoluteString] = Data()
         mockNetworkLayer.stubbedFetchDataError = .responseIssue(.failed)
 
         // WHEN:
@@ -123,7 +123,7 @@ final class PokemonImageProviderTests: XCTestCase {
 
     func testImageFailParseFailure() async {
         // GIVEN:
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemon(name: "Pikachu").endpoint.absoluteString] = Data()
 
         // WHEN:
         await XCTAssertThrowsErrorAsync(

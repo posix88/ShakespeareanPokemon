@@ -18,7 +18,7 @@ public protocol ShakespeareanPokemonDescriptorType: Sendable {
     /// - Parameter pokemon: The name of the Pokémon.
     /// - Returns: A Shakespearean-translated description string.
     /// - Throws: An `SPDError` if the process fails at any stage (network, parsing, translation).
-    func shakespeareanDescription(for pokemon: String) async throws(ShakespeareanPokemonDescriptor.SPDError) -> String
+    func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanPokemonDescriptor.SPDError) -> String
 }
 
 /// An object that fetches and transforms a Pokémon's description into Shakespearean English.
@@ -64,11 +64,11 @@ public struct ShakespeareanPokemonDescriptor: ShakespeareanPokemonDescriptorType
     /// - Parameter pokemon: The name of the Pokémon to describe.
     /// - Returns: A string containing the translated description.
     /// - Throws: An `SPDError` describing the failure reason.
-    public func shakespeareanDescription(for pokemon: String) async throws(SPDError) -> String {
+    public func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(SPDError) -> String {
         do {
             let pokemonData = try await networkWorker.request(PokeAPIService.pokemonSpecies(name: pokemon))
             let pokemonSpecie: PokemonSpecieResponse = try parser.parse(pokemonData)
-            let englishDescription = pokemonSpecie.flavorTextEntries.first(where: { $0.language.code == .english })?.flavorText
+            let englishDescription = pokemonSpecie.flavorTextEntries.first(where: { $0.language.code == language.toModel })?.flavorText
             guard let englishDescription else {
                 throw SPDError.missingTranslation
             }
@@ -81,6 +81,16 @@ public struct ShakespeareanPokemonDescriptor: ShakespeareanPokemonDescriptorType
             throw error
         } catch {
             throw .parsingFailure
+        }
+    }
+}
+
+public enum SupportedLanguage: Sendable {
+    case english
+
+    var toModel: PokemonSpecieResponse.FlavortextEntry.Language.LanguageCode {
+        switch self {
+        case .english: .english
         }
     }
 }

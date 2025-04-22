@@ -9,7 +9,7 @@ import Foundation
 @testable import ShakespeareanPokemon
 
 /// A mock implementation of the `Parser` protocol for testing.
-final class MockCodableParser: Parser {
+final class MockCodableParser: Parser, @unchecked Sendable {
     var parseCalled = false
     var parseCalledCount: Int = .zero
 

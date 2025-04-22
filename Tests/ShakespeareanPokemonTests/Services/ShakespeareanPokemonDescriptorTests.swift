@@ -50,10 +50,11 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
             ShakespeareTranslation.self,
             with: ShakespeareTranslation(translated: expectedTranslation)
         )
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemonSpecies(name: "Pikachu").endpoint.absoluteString] = Data()
+        mockNetworkLayer.stubbedRequestData[FunTranslationService.shakespeare(text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.").endpoint.absoluteString] = Data()
 
         // WHEN:
-        let result = try await sut.shakespeareanDescription(for: "Pikachu")
+        let result = try await sut.shakespeareanDescription(for: "Pikachu", language: .english)
 
         // THEN:
         XCTAssertTrue(mockNetworkLayer.requestInvoked)
@@ -64,11 +65,11 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
 
     func testShakespeareanDescriptorFailParsePokemonResponse() async throws {
         // GIVEN:
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemonSpecies(name: "Pikachu").endpoint.absoluteString] = Data()
 
         // WHEN:
         await XCTAssertThrowsErrorAsync(
-            try await sut.shakespeareanDescription(for: "Pikachu"),
+            try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
             ShakespeareanPokemonDescriptor.SPDError.parsingFailure
         )
 
@@ -94,11 +95,11 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
                 ]
             )
         )
-        mockNetworkLayer.stubbedRequestData = Data()
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemonSpecies(name: "Pikachu").endpoint.absoluteString] = Data()
 
         // WHEN:
         await XCTAssertThrowsErrorAsync(
-            try await sut.shakespeareanDescription(for: "Pikachu"),
+            try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
             ShakespeareanPokemonDescriptor.SPDError.missingTranslation
         )
 
@@ -124,11 +125,12 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
                 ]
             )
         )
-        mockNetworkLayer.stubbedRequestData = Data()
-
+        mockNetworkLayer.stubbedRequestData[PokeAPIService.pokemonSpecies(name: "Pikachu").endpoint.absoluteString] = Data()
+        mockNetworkLayer.stubbedRequestData[FunTranslationService.shakespeare(text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.").endpoint.absoluteString] = Data()
+        
         // WHEN:
         await XCTAssertThrowsErrorAsync(
-            try await sut.shakespeareanDescription(for: "Pikachu"),
+            try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
             ShakespeareanPokemonDescriptor.SPDError.parsingFailure
         )
 
@@ -145,7 +147,7 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
 
         // WHEN:
         await XCTAssertThrowsErrorAsync(
-            try await sut.shakespeareanDescription(for: "Pikachu"),
+            try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
             ShakespeareanPokemonDescriptor.SPDError.networkFailure
         )
 
