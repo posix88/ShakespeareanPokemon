@@ -71,7 +71,7 @@ final class PokemonImageProviderTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.image(for: "Pikachu"),
-            PokemonImageProvider.PIPError.missingImage
+            PokemonImageError.missingImage
         )
 
         // THEN:
@@ -87,7 +87,7 @@ final class PokemonImageProviderTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.image(for: "Pikachu"),
-            PokemonImageProvider.PIPError.networkFailure
+            PokemonImageError.networkFailure
         )
 
         // THEN:
@@ -112,7 +112,7 @@ final class PokemonImageProviderTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.image(for: "Pikachu"),
-            PokemonImageProvider.PIPError.networkFailure
+            PokemonImageError.networkFailure
         )
 
         // THEN:
@@ -128,7 +128,7 @@ final class PokemonImageProviderTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.image(for: "Pikachu"),
-            PokemonImageProvider.PIPError.parsingFailure
+            PokemonImageError.parsingFailure
         )
 
         // THEN:

@@ -70,7 +70,7 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
-            ShakespeareanPokemonDescriptor.SPDError.parsingFailure
+            ShakespeareanError.parsingFailure
         )
 
         // THEN:
@@ -100,7 +100,7 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
-            ShakespeareanPokemonDescriptor.SPDError.missingTranslation
+            ShakespeareanError.missingTranslation
         )
 
         // THEN:
@@ -131,7 +131,7 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
-            ShakespeareanPokemonDescriptor.SPDError.parsingFailure
+            ShakespeareanError.parsingFailure
         )
 
         // THEN:
@@ -148,7 +148,7 @@ final class ShakespeareanPokemonDescriptorTests: XCTestCase {
         // WHEN:
         await XCTAssertThrowsErrorAsync(
             try await sut.shakespeareanDescription(for: "Pikachu", language: .english),
-            ShakespeareanPokemonDescriptor.SPDError.networkFailure
+            ShakespeareanError.networkFailure
         )
 
         // THEN:

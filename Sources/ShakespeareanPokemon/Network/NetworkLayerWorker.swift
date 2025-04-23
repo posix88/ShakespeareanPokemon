@@ -184,7 +184,7 @@ private extension NetworkLayerWorker {
         case 404, 405, 406:
             return .notFound
         case 500...599:
-            return .serverError // server-side errors
+            return .serverError
         default:
             return .failed
         }

@@ -12,8 +12,8 @@ final class MockPokemonImageProvider: PokemonImageProviderType, @unchecked Senda
     var invokedImageForPokemon: Bool = false
     var invokedImageForPokemonParameter: String?
     var stubbedImageForPokemonResult: Data!
-    var stubbedImageForPokemonError: PokemonImageProvider.PIPError?
-    func image(for pokemon: String) async throws(PokemonImageProvider.PIPError) -> Data {
+    var stubbedImageForPokemonError: PokemonImageError?
+    func image(for pokemon: String) async throws(PokemonImageError) -> Data {
         invokedImageForPokemon = true
         invokedImageForPokemonParameter = pokemon
         if let stubbedImageForPokemonError {
@@ -28,8 +28,8 @@ final class MockShakespeareanPokemonDescriptor: ShakespeareanPokemonDescriptorTy
     var invokedShakespeareanDescriptionForPokemonParameterPokemon: String?
     var invokedShakespeareanDescriptionForPokemonParameterLanguage: SupportedLanguage?
     var stubbedShakespeareanDescriptionForPokemonResult: String!
-    var stubbedShakespeareanDescriptionForPokemonError: ShakespeareanPokemonDescriptor.SPDError?
-    func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanPokemonDescriptor.SPDError) -> String {
+    var stubbedShakespeareanDescriptionForPokemonError: ShakespeareanError?
+    func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanError) -> String {
         invokedShakespeareanDescriptionForPokemon = true
         invokedShakespeareanDescriptionForPokemonParameterPokemon = pokemon
         invokedShakespeareanDescriptionForPokemonParameterLanguage = language

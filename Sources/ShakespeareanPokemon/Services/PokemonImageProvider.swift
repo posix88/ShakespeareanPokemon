@@ -21,8 +21,8 @@ public protocol PokemonImageProviderType: Sendable {
     ///
     /// - Parameter pokemon: The name of the Pokémon whose image should be fetched.
     /// - Returns: The raw `Data` representing the Pokémon's image.
-    /// - Throws: A `PokemonImageProvider.PIPError` describing the failure reason.
-    func image(for pokemon: String) async throws(PokemonImageProvider.PIPError) -> Data
+    /// - Throws: A `PokemonImageError` describing the failure reason.
+    func image(for pokemon: String) async throws(PokemonImageError) -> Data
 }
 
 /// An object that provides Pokémon image data by performing network requests and parsing responses.
@@ -33,11 +33,6 @@ public protocol PokemonImageProviderType: Sendable {
 /// let imageData = try await provider.image(for: "pikachu")
 /// let image = UIImage(data: imageData)
 /// ```
-///
-/// - Important: The image retrieval process involves multiple steps: network request, JSON decoding,
-///   and a second image fetch from the provided URL.
-///
-/// - Throws: `PIPError` if the image is missing, the network fails, or decoding is unsuccessful.
 public struct PokemonImageProvider: PokemonImageProviderType {
     private let networkWorker: any NetworkLayer
     private let parser: any Parser
@@ -56,37 +51,37 @@ public struct PokemonImageProvider: PokemonImageProviderType {
         self.parser = CodableParser()
     }
 
-    /// An error type representing the possible failures during Pokémon image fetching.
-    public enum PIPError: Error {
-        /// The response did not contain a usable image URL.
-        case missingImage
-
-        /// A network error occurred during the request or image download.
-        case networkFailure
-
-        /// The response could not be parsed successfully.
-        case parsingFailure
-    }
-
     /// Retrieves the image data for the given Pokémon name.
     ///
     /// - Parameter pokemon: The name of the Pokémon.
     /// - Returns: The image data (`Data`) for the Pokémon's sprite.
-    /// - Throws: `PIPError` if the process fails at any stage.
-    public func image(for pokemon: String) async throws(PIPError) -> Data {
+    /// - Throws: `PokemonImageError` if the process fails at any stage.
+    public func image(for pokemon: String) async throws(PokemonImageError) -> Data {
         do {
             let pokemonData = try await networkWorker.request(PokeAPIService.pokemon(name: pokemon))
             let pokemon: PokemonResponse = try parser.parse(pokemonData)
             guard let imageURL = pokemon.sprites.front.asURL else {
-                throw PIPError.missingImage
+                throw PokemonImageError.missingImage
             }
             return try await networkWorker.fetchData(from: imageURL)
         } catch is NetworkError {
             throw .networkFailure
-        } catch let error as PIPError {
+        } catch let error as PokemonImageError {
             throw error
         } catch {
             throw .parsingFailure
         }
     }
+}
+
+/// An error type representing the possible failures during Pokémon image fetching.
+public enum PokemonImageError: Error {
+    /// The response did not contain a usable image URL.
+    case missingImage
+
+    /// A network error occurred during the request or image download.
+    case networkFailure
+
+    /// The response could not be parsed successfully.
+    case parsingFailure
 }

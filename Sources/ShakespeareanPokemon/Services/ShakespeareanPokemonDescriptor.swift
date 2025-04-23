@@ -18,7 +18,7 @@ public protocol ShakespeareanPokemonDescriptorType: Sendable {
     /// - Parameter pokemon: The name of the Pokémon.
     /// - Returns: A Shakespearean-translated description string.
     /// - Throws: An `SPDError` if the process fails at any stage (network, parsing, translation).
-    func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanPokemonDescriptor.SPDError) -> String
+    func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanError) -> String
 }
 
 /// An object that fetches and transforms a Pokémon's description into Shakespearean English.
@@ -47,42 +47,42 @@ public struct ShakespeareanPokemonDescriptor: ShakespeareanPokemonDescriptorType
         self.parser = CodableParser()
     }
 
-    /// Error type representing the failure scenarios during description fetching and translation.
-    public enum SPDError: Error {
-        /// The Pokémon description could not be found or was not available in English.
-        case missingTranslation
-
-        /// A network-related failure occurred (e.g., timeout, connectivity).
-        case networkFailure
-
-        /// A decoding or parsing error occurred with the response data.
-        case parsingFailure
-    }
-
     /// Fetches a Shakespearean translation of a Pokémon's description.
     ///
     /// - Parameter pokemon: The name of the Pokémon to describe.
     /// - Returns: A string containing the translated description.
-    /// - Throws: An `SPDError` describing the failure reason.
-    public func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(SPDError) -> String {
+    /// - Throws: An `ShakespeareanError` describing the failure reason.
+    public func shakespeareanDescription(for pokemon: String, language: SupportedLanguage) async throws(ShakespeareanError) -> String {
         do {
             let pokemonData = try await networkWorker.request(PokeAPIService.pokemonSpecies(name: pokemon))
             let pokemonSpecie: PokemonSpecieResponse = try parser.parse(pokemonData)
             let englishDescription = pokemonSpecie.flavorTextEntries.first(where: { $0.language.code == language.toModel })?.flavorText
             guard let englishDescription else {
-                throw SPDError.missingTranslation
+                throw ShakespeareanError.missingTranslation
             }
             let shakespeareData = try await networkWorker.request(FunTranslationService.shakespeare(text: englishDescription))
             let translation: ShakespeareTranslation = try parser.parse(shakespeareData)
             return translation.translated
         } catch is NetworkError {
             throw .networkFailure
-        } catch let error as SPDError {
+        } catch let error as ShakespeareanError {
             throw error
         } catch {
             throw .parsingFailure
         }
     }
+}
+
+/// Error type representing the failure scenarios during description fetching and translation.
+public enum ShakespeareanError: Error {
+    /// The Pokémon description could not be found or was not available in English.
+    case missingTranslation
+
+    /// A network-related failure occurred (e.g., timeout, connectivity).
+    case networkFailure
+
+    /// A decoding or parsing error occurred with the response data.
+    case parsingFailure
 }
 
 public enum SupportedLanguage: Sendable {

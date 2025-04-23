@@ -84,7 +84,7 @@ var body: some View {
 ## ⚠️ Notes
 
 - The FunTranslations API has rate limiting (5 requests/hour for free tier).
-- Network failures and translation errors are gracefully handled via typed error enums (`PIPError`, `SPDError`).
+- Network failures and translation errors are gracefully handled via typed error enums (`PokemonImageError`, `ShakespeareanError`).
 - I found some issues on iOS 18.4 simulator going always on timeout, not the case using iOS 18.2 simulator
 
 

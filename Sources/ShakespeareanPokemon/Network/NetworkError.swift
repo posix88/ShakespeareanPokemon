@@ -6,10 +6,6 @@
 //
 
 /// An enumeration describing possible errors encountered during a network request.
-///
-/// This enum conforms to the `Error` protocol and can be used to handle various
-/// failure scenarios in a networking layer.
-///
 enum NetworkError: Error {
 
     /// Indicates that the request was attempted without a valid URL.

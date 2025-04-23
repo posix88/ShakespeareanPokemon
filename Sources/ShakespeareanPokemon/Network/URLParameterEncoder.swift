@@ -8,20 +8,6 @@
 import Foundation
 
 /// A protocol that defines how to encode parameters into a `URLRequest` as part of the URL.
-///
-/// Types conforming to `URLParameterEncoderType` are responsible for transforming
-/// a dictionary of parameters into a format suitable for URL-based HTTP methods like `GET`.
-///
-/// The encoded parameters are typically appended as a query string to the request's URL.
-///
-/// Example usage:
-/// ```swift
-/// struct URLParameterEncoder: URLParameterEncoderType {
-///     func encode(urlRequest: inout URLRequest, with parameters: Parameters?) throws {
-///         // Implementation
-///     }
-/// }
-/// ```
 protocol URLParameterEncoderType: Sendable {
     /// Encodes the provided parameters into the given `URLRequest`.
     ///
@@ -37,9 +23,6 @@ protocol URLParameterEncoderType: Sendable {
 ///
 /// `URLParameterEncoder` converts a dictionary of parameters into a percent-encoded query string
 /// and appends it to the request's URL.
-///
-/// This encoder is typically used for `GET`, `DELETE`, or other methods where parameters
-/// are expected in the URL rather than the request body.
 ///
 /// Example usage:
 /// ```swift
