@@ -39,3 +39,13 @@ final class MockShakespeareanPokemonDescriptor: ShakespeareanPokemonDescriptorTy
         return stubbedShakespeareanDescriptionForPokemonResult
     }
 }
+
+final class MockPokemonProfileViewModelType: PokemonProfileViewModelType, @unchecked Sendable {
+    var onError: ((String) -> Void)?
+    var onDataLoaded: ((Data, String) -> Void)?
+
+    var invokedLoad: Bool = false
+    func load(for name: String) async {
+        invokedLoad = true
+    }
+}

@@ -31,7 +31,6 @@ final class PokemonProfileViewModel: PokemonProfileViewModelType {
         self.imageProvider = imageProvider
     }
 
-    @MainActor
     func load(for name: String) async {
         do {
             async let description = try await descriptor.shakespeareanDescription(for: name, language: .english)

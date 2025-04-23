@@ -61,6 +61,14 @@ let profileView = PokemonProfileView()
 profileView.pokemonName = "bulbasaur"
 ```
 
+### SwiftUI View
+
+```swift
+var body: some View {
+    SUIPokemonProfileView(pokemon: "Charizard")
+}
+```
+
 ---
 
 ## 🧱 Architecture Overview
